@@ -1,0 +1,26 @@
+grammar Main
+  rule command
+    ex ws arg (ws options)?
+  end
+  rule ws
+    ' '
+  end
+  rule ows
+    ws*
+  end
+  rule word
+    [a-z]+
+  end
+  rule ex
+    word
+  end
+  rule arg
+    word
+  end
+  rule option
+    '-' word
+  end
+  rule options
+    option (ws option)*
+  end
+end
