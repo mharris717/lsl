@@ -1,22 +1,32 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Lsl" do
-  it "smoke" do
-    2.should == 2
+  before do
+    @parser = LSL::MainParser.new
   end
-  it "foo" do
-    parser = MainParser.new
-    res = parser.parse("cp abc")
-    puts res.inspect
-    res.should be
-    
+  def parser; @parser; end
+  it 'naked ex' do
+    parser.should be_parsed("cp")
   end
-  it "foo2" do
-    parser = MainParser.new
-    res = parser.parse("cp abc -v")
-    puts res.inspect
-    res.should be
-    
+  it "ex with arg" do
+    parser.should be_parsed("cp abc")
+  end
+  it "ex with args" do
+    parser.should be_parsed("cp abc xyz")
+  end
+  it "ex with option" do
+    parser.should be_parsed("cp -v")
+  end
+  it "ex with arg and option" do
+    parser.should be_parsed("cp abc -v")
+  end
+  it "ex with quoted arg" do
+    parser.should be_parsed('cp "a b"')
   end
   
 end
+
+a = <<EOF
+output redirection
+quoting
+EOF

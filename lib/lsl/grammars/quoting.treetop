@@ -1,0 +1,14 @@
+module LSL
+  grammar Quoting
+    include LSL::Base
+    rule optionally_quoted_string
+      quoted_string / word
+    end
+    rule quoted_string
+      '"' quoteless_string '"'
+    end
+    rule quoteless_string
+      (!'"' . quoteless_string) / ""
+    end
+  end
+end

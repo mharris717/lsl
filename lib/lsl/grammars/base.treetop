@@ -1,0 +1,16 @@
+module LSL
+  grammar Base
+    rule word
+      [a-zA-Z]+
+    end
+    rule ws1
+      ' '
+    end
+    rule ws
+      ws1+
+    end
+    rule ows
+      ws*
+    end
+  end
+end
