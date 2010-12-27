@@ -77,4 +77,5 @@ quoting
 
 going to ignore list arguments for now
 how to i break out into raw code
+ability to bring code directly into the shell
 EOF

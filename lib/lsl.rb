@@ -50,4 +50,11 @@ class SingleCommandObj
   def url
     "http://localhost:4567/#{ex}" + args.map { |x| "/#{x}" }.join
   end
+  def method
+    ex.split(".").last
+  end
+  def obj
+    a = ex.split(".")
+    (a.size > 1) ? eval(a.first) : nil
+  end
 end

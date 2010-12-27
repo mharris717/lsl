@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + "/../lsl"
 require 'open-uri'
+require 'fileutils'
 
 class CommandEnv
   def echo(str)
@@ -13,13 +14,22 @@ class CommandEnv
   end
 end
 
+class Foo
+  def self.bar(*args)
+    puts "bar #{args.inspect}"
+  end
+end
+
 class Shell
   fattr(:env) { CommandEnv.new }
   fattr(:parser) { LSL::SingleCommandParser.new }
   def run(str)
     command = parser.parse(str).command_hash
-    #env.send(command.ex,*command.args)
-    open(command.url)
+    obj = command.obj || env
+    obj.send(command.method,*command.args)
+    #open(command.url)
+  rescue => exp
+    puts "command failed #{exp.message}"
   end
   def run_loop
     loop do
