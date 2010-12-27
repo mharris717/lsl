@@ -46,7 +46,27 @@ describe "Command" do
   end
   it "should have args" do
     parser.should parse_as("cp a b",:args,"a b")
-    puts parse("cp a b").args.local_methods.inspect
+    parse("cp a b").args.list_values.should == ['a','b']
+  end
+  describe "command hash" do
+    it "naked ex" do
+      parse("cp").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {}}
+    end
+    it "ex and args" do
+      parse("cp a b").command_hash.to_h.should == {:ex => "cp", :args => ['a','b'], :options => {}}
+    end
+    it 'quoted arg' do
+      parse('cp "abc"').command_hash.args.should == ['abc']
+    end
+    it "ex and options" do
+      parse("cp -v").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => nil}}
+    end
+    it "ex and multiple options" do
+      parse("cp -v -x").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => nil, "x" => nil}}
+    end
+    it "ex and option value" do
+      parse("cp -v a").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => 'a'}}
+    end
   end
   
 end
@@ -54,4 +74,7 @@ end
 a = <<EOF
 output redirection
 quoting
+
+going to ignore list arguments for now
+how to i break out into raw code
 EOF

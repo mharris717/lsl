@@ -5,7 +5,13 @@ module LSL
     rule single_command
       ex (ws args)? (ws options)? {
         def args
-          elements[1].args
+          find_child_node(:args)
+        end
+        def options
+          find_child_node(:options)
+        end
+        def command_hash
+          SingleCommandObj.new(:ex => ex.text_value, :args => args.andand.list_values || [], :options => options.andand.hash_values || {})
         end
       }
     end
@@ -25,10 +31,24 @@ module LSL
       '-' word
     end
     rule option
-      option_flag (ws optionally_quoted_string)?
+      option_flag (ws optionally_quoted_string)? {
+        def kv
+          n = find_child_node2(:optionally_quoted_string)
+          {option_flag.word.text_value => n.andand.text_value}
+        end
+      }
     end
     rule options
-      option (ws option)*
+      option (ws option)* {
+        def hash_values
+          res = option.kv
+          elements[1..-1].each do |e|
+            n = e.find_child_node2(:option)
+            res = res.merge(n.kv) if n
+          end
+          res
+        end
+      }
     end
   end
 end
