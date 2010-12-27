@@ -1,0 +1,4 @@
+#! /usr/bin/ruby
+
+require 'rubygems'
+require File.dirname(__FILE__) + "/../lib/lsl/sandbox"
