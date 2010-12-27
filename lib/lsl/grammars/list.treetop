@@ -1,0 +1,8 @@
+module LSL
+  grammar List
+    include LSL::Base
+    rule comma_list
+      optionally_quoted_string ("," comma_list)*
+    end
+  end
+end

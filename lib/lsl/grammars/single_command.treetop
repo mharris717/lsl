@@ -1,0 +1,34 @@
+module LSL
+  grammar SingleCommand
+    include LSL::Quoting
+    include LSL::List
+    rule single_command
+      ex (ws args)? (ws options)? {
+        def args
+          elements[1].args
+        end
+      }
+    end
+    
+    rule ex
+      word
+    end
+    
+    rule arg
+      comma_list
+    end
+    rule args
+      arg (ws arg)*
+    end
+    
+    rule option_flag
+      '-' word
+    end
+    rule option
+      option_flag (ws optionally_quoted_string)?
+    end
+    rule options
+      option (ws option)*
+    end
+  end
+end

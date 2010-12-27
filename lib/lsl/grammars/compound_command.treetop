@@ -1,0 +1,9 @@
+module LSL
+  grammar CompoundCommand
+    include LSL::SingleCommand
+    include LSL::File
+    rule full_command
+      single_command (ows ">" ows filename)?
+    end
+  end
+end

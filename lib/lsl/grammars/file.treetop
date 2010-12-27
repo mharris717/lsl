@@ -1,0 +1,7 @@
+module LSL
+  grammar File
+    rule filename
+      [a-zA-Z\.\/\\_]+
+    end
+  end
+end

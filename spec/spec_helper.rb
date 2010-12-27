@@ -22,8 +22,55 @@ end
 #   end
 # end
 
+class Object
+  def local_methods
+    res = methods - 7.methods - "".methods
+    res.sort_by { |x| x.to_s }
+  end
+end
+
 RSpec::Matchers.define :be_parsed do |str|
   match do |parser|
     !!parser.parse(str)
+  end
+end
+
+class Object
+  def rt?(meth)
+    send(meth)
+    true
+  rescue => exp
+    return false
+  end
+end
+
+RSpec::Matchers.define :parse_as do |str,node,exp|
+
+  def res_error_message(str,node,exp)
+    if !@res
+      "no parse result"
+    elsif !@res.rt?(node)
+      #puts @res.elements.first.class
+      #raise @res.elements.first.local_methods.inspect
+      #raise @res.instance_variables.inspect
+      "no syntax node #{node}, nodes are " + @res.elements.map { |x| x.inspect }.join(",")
+    else
+      act = @res.send(node).text_value
+      if act != exp.to_s
+        "#{act} doesn't equal #{exp}"
+      else
+        nil
+      end
+    end
+  end
+  match do |parser|
+    @res = res = parser.parse(str)
+    !res_error_message(str,node,exp)
+  end
+  description do
+    "FOO"
+  end
+  failure_message_for_should do |player|
+    res_error_message(str,node,exp)
   end
 end
