@@ -11,7 +11,8 @@ module LSL
           find_child_node(:options)
         end
         def command_hash
-          SingleCommandObj.new(:ex => ex.text_value, :args => args.andand.list_values || [], :options => options.andand.hash_values || {})
+          SingleCommandObj.new(:raw => text_value, :ex => ex.text_value, 
+                               :args => args.andand.list_values || [], :options => options.andand.hash_values || {})
         end
       }
     end

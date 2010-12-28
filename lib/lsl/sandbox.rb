@@ -32,13 +32,21 @@ end
 class Shell
   fattr(:env) { CommandEnv.new }
   fattr(:parser) { LSL::SingleCommandParser.new }
-  def run(str)
+  def runx(str)
     command = parser.parse(str).command_hash
     obj = command.obj || env
     a = command.args
     a << [command.options] unless command.options.empty?
     res = obj.send(command.method,*a)
-    puts "RESULT: #{res.inspect}" if res
+    puts "RESULT: #{res}" if res
+    #open(command.url)
+  rescue => exp
+    puts "command failed #{exp.message}"
+  end
+  def run(str)
+    command = parser.parse(str).command_hash
+    res = LSL::ExecutionStrategy::Eval.new.call(command)
+    puts "RESULT: #{res}" if res
     #open(command.url)
   rescue => exp
     puts "command failed #{exp.message}"
@@ -57,3 +65,5 @@ def run_shell!(obj=nil)
   s.env = obj if obj
   s.run_loop
 end
+
+run_shell!

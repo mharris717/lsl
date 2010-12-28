@@ -70,6 +70,9 @@ describe "Command" do
     it "ex and option value" do
       parse("cp -v a").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => 'a'}}
     end
+    it 'raw string' do
+      parse("cp a b").command_hash.raw.should == 'cp a b'
+    end
   end
   
 end

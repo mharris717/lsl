@@ -1,7 +1,7 @@
 module LSL
   grammar Base
     rule word
-      [a-zA-Z\.\/\\]+
+      [a-zA-Z\.\/\\:]+
     end
     rule ws1
       ' '

@@ -13,8 +13,14 @@ class Object
   def present?
     !blank?
   end
+  def quoted?
+    ((self[0..0]+self[-1..-1]) == '""')
+  end
   def unquoted
-    ((self[0..0]+self[-1..-1]) == '""') ? self[1..-2] : self
+    quoted? ? self[1..-2] : self
+  end
+  def quoted
+    quoted? ? self : "\"#{self}\""
   end
 end
 
@@ -23,7 +29,6 @@ class Object
     elements.map { |x| x.text_value.strip }.map { |x| x.split(" ") }.flatten.map { |x| x.strip }.select { |x| x.present? }.map { |x| x.unquoted }
   end
   def find_child_node(node)
-    
     elements.each do |e|
       return e.send(node) if e.respond_to?(node)
     end
@@ -37,7 +42,7 @@ class Object
 end
 
 class SingleCommandObj
-  attr_accessor :ex, :args, :options
+  attr_accessor :ex, :args, :options, :raw
   include FromHash
   def to_h
     {:ex => ex, :args => args, :options => options}
@@ -53,3 +58,30 @@ class SingleCommandObj
     (a.size > 1) ? eval(a.first) : nil
   end
 end
+
+module LSL
+  module ExecutionStrategy
+    class Base
+    end
+    class Shell < Base
+      def call(cmd)
+        str = "#{cmd.ex} " + cmd.args.join(" ")
+        `#{str}`
+      end
+    end
+    class Eval < Base
+      def str(cmd)
+        "#{cmd.ex} " + cmd.args.map { |x| x.quoted }.join(" ")
+      end
+      def call(cmd)
+        eval(str(cmd))
+      end
+    end
+    
+    
+  end
+end
+
+
+
+
