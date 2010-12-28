@@ -20,7 +20,7 @@ end
 
 class Object
   def list_values
-    elements.map { |x| x.text_value.strip }.select { |x| x.present? }.map { |x| x.unquoted }
+    elements.map { |x| x.text_value.strip }.map { |x| x.split(" ") }.flatten.map { |x| x.strip }.select { |x| x.present? }.map { |x| x.unquoted }
   end
   def find_child_node(node)
     
@@ -31,12 +31,7 @@ class Object
     nil
   end
   def find_child_node2(node)
-    
-    elements.each do |e|
-      return e.send(node) if e.respond_to?(node)
-    end
-    #return send(node) if respond_to?(node)
-    nil
+    find_child_node(node)
   end
         
 end

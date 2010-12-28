@@ -4,8 +4,3 @@ describe "Lsl" do
   
   
 end
-
-a = <<EOF
-output redirection
-quoting
-EOF

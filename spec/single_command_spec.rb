@@ -55,6 +55,9 @@ describe "Command" do
     it "ex and args" do
       parse("cp a b").command_hash.to_h.should == {:ex => "cp", :args => ['a','b'], :options => {}}
     end
+    it "ex and 3 args" do
+      parse("cp a b c").command_hash.to_h.should == {:ex => "cp", :args => ['a','b','c'], :options => {}}
+    end
     it 'quoted arg' do
       parse('cp "abc"').command_hash.args.should == ['abc']
     end
@@ -78,4 +81,5 @@ quoting
 going to ignore list arguments for now
 how to i break out into raw code
 ability to bring code directly into the shell
+easy extensibility by anyone using the library
 EOF
