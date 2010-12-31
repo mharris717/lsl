@@ -6,57 +6,16 @@ require 'mharris_ext'
   require File.dirname(__FILE__) + "/lsl/grammars/#{g}"
 end
 
-class Object
-  def blank?
-    to_s.strip == ''
-  end
-  def present?
-    !blank?
-  end
-  def quoted?
-    ((self[0..0]+self[-1..-1]) == '""')
-  end
-  def unquoted
-    quoted? ? self[1..-2] : self
-  end
-  def quoted
-    quoted? ? self : "\"#{self}\""
-  end
+%w(single compound execution).each do |f|
+  require File.dirname(__FILE__) + "/lsl/command/#{f}"
 end
 
-class Object
-  def list_values
-    elements.map { |x| x.text_value.strip }.map { |x| x.split(" ") }.flatten.map { |x| x.strip }.select { |x| x.present? }.map { |x| x.unquoted }
-  end
-  def find_child_node(node)
-    elements.each do |e|
-      return e.send(node) if e.respond_to?(node)
-    end
-    #return send(node) if respond_to?(node)
-    nil
-  end
-  def find_child_node2(node)
-    find_child_node(node)
-  end
-        
+%w(ext).each do |f|
+  require File.dirname(__FILE__) + "/lsl/ext/#{f}"
 end
 
-class SingleCommandObj
-  attr_accessor :ex, :args, :options, :raw, :output_filename
-  include FromHash
-  def to_h
-    {:ex => ex, :args => args, :options => options}
-  end
-  def url
-    "http://localhost:4567/#{ex}" + args.map { |x| "/#{x}" }.join
-  end
-  def method
-    ex.split(".").last
-  end
-  def obj
-    a = ex.split(".")
-    (a.size > 1) ? eval(a.first) : nil
-  end
+%w(shell).each do |f|
+  require File.dirname(__FILE__) + "/lsl/#{f}"
 end
 
 module LSL
@@ -80,6 +39,13 @@ module LSL
     
     
   end
+end
+
+def with_debug
+  $debug = true
+  yield
+ensure
+  $debug = false
 end
 
 

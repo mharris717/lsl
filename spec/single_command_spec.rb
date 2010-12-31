@@ -55,6 +55,9 @@ describe "Command" do
     it "ex and args" do
       parse("cp a b").command_hash.to_h.should == {:ex => "cp", :args => ['a','b'], :options => {}}
     end
+    it "ex and args 2" do
+      parse("cp a b").command_hash.ex.should == 'cp'
+    end
     it "ex and 3 args" do
       parse("cp a b c").command_hash.to_h.should == {:ex => "cp", :args => ['a','b','c'], :options => {}}
     end

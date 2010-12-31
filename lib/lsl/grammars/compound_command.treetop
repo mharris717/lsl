@@ -7,9 +7,16 @@ module LSL
         def filename
           find_child_node(:filename)
         end
+        def single_commands
+
+          res = [single_command.command_hash]
+          rest = find_child_nodes(:single_command).map { |x| x.command_hash }
+          #puts "rest #{rest.size}"
+          res + rest
+        end
         def command_hash
-          res = single_command.command_hash
-          res.output_filename = filename.text_value
+          res = LSL::Command::Compound.new(:commands => single_commands)
+          res.output_filename = filename.text_value if filename
           res
         end
       }
