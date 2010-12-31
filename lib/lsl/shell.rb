@@ -17,7 +17,10 @@ module LSL
     module Inner
       def echo(*args)
         #puts args.inspect
-        puts args.join(" ")
+        ops = (args.last.kind_of?(Hash) ? args.pop : {})
+        str = args.join(" ")
+        str = str.upcase if ops.has_key?('upper')
+        puts str
         nil
       end
       def echot(*args)
@@ -61,6 +64,9 @@ module LSL
       end
       def rand
         Kernel.rand()
+      end
+      def pt(a,b)
+        puts a==b
       end
     end
     include FileUtils

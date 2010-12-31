@@ -68,13 +68,23 @@ module LSL
       fattr(:args) do
         command_args + fixed_input_args
       end
+      def my_eval(ops,str)
+        OpenStruct.new(ops).instance_eval(str)
+      rescue => exp
+        puts "failed #{exp.message}"
+      end
       fattr(:result) do
         if command.eval?
-          
-          args.each_with_expansion do |a|
-            os = OpenStruct.new(:args => a, :arg => a.first)
-            os.instance_eval(command.raw[1..-2])
+          res = []
+          if args.empty?
+            res << my_eval(command.raw[1..-2],:args => [], :arg => nil)
+          else
+            args.each_with_expansion do |a|
+              res << my_eval(command.raw[1..-2],:args => a, :arg => a.first)
+            end
           end
+          #puts res.inspect
+          res
         elsif obj.respond_to?(command.method)
           res = obj.send_with_expansion(command.method,*args)
           #puts "RES #{res.inspect}" if res
