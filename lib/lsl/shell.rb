@@ -16,7 +16,9 @@ module LSL
   module ShellLike
     module Inner
       def echo(*args)
+        #puts args.inspect
         puts args.join(" ")
+        nil
       end
       def ls(d=".")
         ec_array "ls #{d}"
@@ -33,6 +35,22 @@ module LSL
         res = args.sort_by { |x| x.size }.last
         #puts "Longest: #{res}"
         res
+      end
+      def pm(a,b)
+        puts a.length * b.length
+      end
+      def cc(*args)
+        args.reverse.join("")
+      end
+      def la(*args)
+        ::File.append("spec/mock_dir/log.txt","LOG #{Time.now} " + args.join(",") + "\n")
+      end
+      def cd(d)
+        Dir.chdir(d)
+      end
+      def exit(*args)
+        puts "Exiting"
+        Kernel.exit(*args)
       end
     end
     include FileUtils
@@ -55,7 +73,7 @@ module LSL
     end
     def run_loop
       loop do
-        print "> "
+        print "#{Dir.getwd}> "
         str = get_input
         run(str)
       end
@@ -64,7 +82,7 @@ module LSL
 end
 
 def run_shell!(obj=nil)
-  s = Shell.new
+  s = LSL::Shell.new
   s.env = obj if obj
   s.run_loop
 end
