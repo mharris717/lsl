@@ -14,6 +14,10 @@ end
   require File.dirname(__FILE__) + "/lsl/ext/#{f}"
 end
 
+%w(mapping).each do |f|
+  require File.dirname(__FILE__) + "/lsl/mapping/#{f}"
+end
+
 %w(shell).each do |f|
   require File.dirname(__FILE__) + "/lsl/#{f}"
 end
