@@ -42,7 +42,7 @@ class Object
 end
 
 class SingleCommandObj
-  attr_accessor :ex, :args, :options, :raw
+  attr_accessor :ex, :args, :options, :raw, :output_filename
   include FromHash
   def to_h
     {:ex => ex, :args => args, :options => options}

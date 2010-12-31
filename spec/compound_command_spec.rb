@@ -11,5 +11,11 @@ describe "CompoundCommand" do
   it 'command with output redirection' do
     parser.should be_parsed("cp a b > foo.txt")
   end
+  it 'command with output redirection 2' do
+    parser.parse("cp a b > foo.txt").command_hash.output_filename.should == 'foo.txt'
+  end
+  it 'pipes' do
+    parser.should be_parsed("cp a b | cp a b > foo.txt")
+  end
   
 end

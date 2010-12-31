@@ -3,7 +3,16 @@ module LSL
     include LSL::SingleCommand
     include LSL::File
     rule full_command
-      single_command (ows ">" ows filename)?
+      single_command (ows "|" ows single_command)* (ows ">" ows filename)? {
+        def filename
+          find_child_node(:filename)
+        end
+        def command_hash
+          res = single_command.command_hash
+          res.output_filename = filename.text_value
+          res
+        end
+      }
     end
   end
 end

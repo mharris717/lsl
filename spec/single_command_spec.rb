@@ -85,4 +85,7 @@ going to ignore list arguments for now
 how to i break out into raw code
 ability to bring code directly into the shell
 easy extensibility by anyone using the library
+pipes
+need a lesson on bash syntax
+piping inut, communicating in json.  what's diff between array and array of args
 EOF
