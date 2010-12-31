@@ -3,6 +3,9 @@ module LSL
     class Single
       attr_accessor :ex, :args, :options, :raw
       include FromHash
+      def eval?
+        raw[0..0] == "{"
+      end
       def to_h
         {:ex => ex, :args => args, :options => options}
       end

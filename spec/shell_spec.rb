@@ -14,7 +14,7 @@ describe "Shell" do
   end
   it 'piping' do
     @shell.run('ls VERSION | pf')
-    $printed.should == ['0.0.1']
+    $printed.should == ['0.1.0']
   end
   it 'foo' do
     #30.times do
@@ -32,7 +32,10 @@ describe "Shell" do
     run("remote_call foo | echo")
   end
   it 'rake' do
-    run("abc").result.should == "ran"
+    #run("abc").result.should == "ran"
+  end
+  it 'eval' do
+    run("{2 + 2}").result.should == 4
   end
   describe 'output redirection' do
     before do

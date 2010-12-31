@@ -20,6 +20,10 @@ module LSL
         puts args.join(" ")
         nil
       end
+      def echot(*args)
+        echo(*args)
+        echo(*args)
+      end
       def ls(d=".")
         ec_array "ls #{d}"
       end
@@ -51,6 +55,12 @@ module LSL
       def exit(*args)
         puts "Exiting"
         Kernel.exit(*args)
+      end
+      def eval(*args)
+        Kernel.eval(args.join(" "))
+      end
+      def rand
+        Kernel.rand()
       end
     end
     include FileUtils

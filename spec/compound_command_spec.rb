@@ -46,5 +46,8 @@ describe "CompoundCommand" do
       res.should == [[],14]
     end
   end
+  it 'takes eval str' do
+    parse_obj("{2 + 2}")
+  end
   
 end
