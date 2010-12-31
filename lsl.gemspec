@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lsl}
-  s.version = "0.0.1"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["mharris717"]
-  s.date = %q{2010-12-27}
+  s.date = %q{2010-12-31}
   s.default_executable = %q{lsl}
   s.description = %q{little shell language}
   s.email = %q{mharris717@gmail.com}
@@ -29,20 +29,32 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/lsl",
     "lib/lsl.rb",
+    "lib/lsl/command/compound.rb",
+    "lib/lsl/command/execution.rb",
+    "lib/lsl/command/single.rb",
+    "lib/lsl/ext/ext.rb",
     "lib/lsl/grammars/base.treetop",
     "lib/lsl/grammars/compound_command.treetop",
     "lib/lsl/grammars/file.treetop",
     "lib/lsl/grammars/list.treetop",
     "lib/lsl/grammars/quoting.treetop",
     "lib/lsl/grammars/single_command.treetop",
+    "lib/lsl/mapping/mapping.rb",
     "lib/lsl/sandbox.rb",
     "lib/lsl/server.rb",
+    "lib/lsl/shell.rb",
     "lsl.gemspec",
     "spec/compound_command_spec.rb",
     "spec/lsl_spec.rb",
+    "spec/mock_dir/a.txt",
+    "spec/mock_dir/b.txt",
+    "spec/mock_dir/log.txt",
+    "spec/mock_dir/output.txt",
     "spec/quoting_spec.rb",
+    "spec/shell_spec.rb",
     "spec/single_command_spec.rb",
-    "spec/spec_helper.rb"
+    "spec/spec_helper.rb",
+    "to"
   ]
   s.homepage = %q{http://github.com/mharris717/lsl}
   s.licenses = ["MIT"]
@@ -53,6 +65,7 @@ Gem::Specification.new do |s|
     "spec/compound_command_spec.rb",
     "spec/lsl_spec.rb",
     "spec/quoting_spec.rb",
+    "spec/shell_spec.rb",
     "spec/single_command_spec.rb",
     "spec/spec_helper.rb"
   ]
