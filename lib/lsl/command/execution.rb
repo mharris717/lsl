@@ -100,7 +100,7 @@ module LSL
         if command.output_filename
           ::File.create(command.output_filename,result.join("\n"))
         else
-          puts result.inspect if result
+          puts result.join("\n") if result
         end
       end
       def result
