@@ -22,6 +22,21 @@ end
   require File.dirname(__FILE__) + "/lsl/#{f}"
 end
 
+%w(dsl).each do |f|
+  f = File.expand_path(File.dirname(__FILE__)) + "/lsl/dsl/#{f}"
+  #puts f
+  require f
+end
+
+def load_config!
+  f = ENV['HOME'] + "/.lsl"
+  if FileTest.exist?(f)
+    eval(File.read(f))
+  end
+end
+
+load_config!
+
 module LSL
   module ExecutionStrategy
     class Base

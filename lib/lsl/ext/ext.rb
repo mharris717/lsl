@@ -37,3 +37,42 @@ class Array
     flatten.select { |x| x }.empty?
   end
 end
+
+class Object
+  def dsl_method(meth,ops={})
+    define_method(meth) do |*args|
+      if args.size > 0
+        send("#{meth}=",*args)
+      elsif false && b
+        send("#{meth}=",b)
+      else
+        instance_variable_get("@#{meth}")
+      end
+    end
+    attr_writer meth
+    define_method("#{meth}!") do
+      send("#{meth}=",true)
+    end
+  end
+  def dsl_method_arr(meth,ops={},&obj_blk)
+    define_method(meth) do |*args|
+      #puts 'start'
+      send("#{meth}=",[]) unless instance_variable_get("@#{meth}")
+      #puts 'start set'
+      if args.size == 1
+        instance_variable_get("@#{meth}") << args.first
+      elsif args.size == 2
+        arg = args[1]
+        arg[:name] = args.first
+        instance_variable_get("@#{meth}") << arg
+      elsif false && b
+        instance_variable_get("@#{meth}") << b
+      else
+        res = instance_variable_get("@#{meth}")
+        res = res.map { |x| obj_blk[x,self] } if obj_blk
+        res
+      end
+    end
+    attr_writer meth
+  end
+end

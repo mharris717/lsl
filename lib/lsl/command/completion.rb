@@ -29,7 +29,12 @@ module LSL
       fattr(:base) { LSL::Completion::Base.instance }
       attr_accessor :command_matcher, :option_generator
       def options
-        [base.shell.run(option_generator).result].flatten.select { |x| x }
+        res = if option_generator.kind_of?(String)
+          base.shell.run(option_generator).result
+        else
+          option_generator.call
+        end
+        [res].flatten.select { |x| x }
       end
       def match?(cmd)
         cmd =~ command_matcher
@@ -71,7 +76,4 @@ module LSL
   end
 end
 
-c = LSL::Completion::Base.instance
-#c.option_generator = "ls"
-c.mappings.add(:command_matcher => /rake/i, :option_generator => 'rake -T | column _ 5 24')
       
