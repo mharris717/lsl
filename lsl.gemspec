@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{lsl}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["mharris717"]
-  s.date = %q{2010-12-31}
+  s.date = %q{2011-01-03}
   s.default_executable = %q{lsl}
   s.description = %q{little shell language}
   s.email = %q{mharris717@gmail.com}
@@ -29,9 +29,12 @@ Gem::Specification.new do |s|
     "VERSION",
     "bin/lsl",
     "lib/lsl.rb",
+    "lib/lsl/command/args.rb",
+    "lib/lsl/command/completion.rb",
     "lib/lsl/command/compound.rb",
     "lib/lsl/command/execution.rb",
     "lib/lsl/command/single.rb",
+    "lib/lsl/dsl/dsl.rb",
     "lib/lsl/ext/ext.rb",
     "lib/lsl/grammars/base.treetop",
     "lib/lsl/grammars/compound_command.treetop",
@@ -39,6 +42,7 @@ Gem::Specification.new do |s|
     "lib/lsl/grammars/list.treetop",
     "lib/lsl/grammars/quoting.treetop",
     "lib/lsl/grammars/single_command.treetop",
+    "lib/lsl/junk.rb",
     "lib/lsl/mapping/mapping.rb",
     "lib/lsl/sandbox.rb",
     "lib/lsl/server.rb",
