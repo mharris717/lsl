@@ -3,19 +3,26 @@ module LSL
     include LSL::SingleCommand
     include LSL::File
     rule full_command
-      some_command more:(ows "|" ows some_command)* spaced_filename:(ows ">" ows filename)? {
+      some_command more:(ows pipe ows some_command)* spaced_filename:(ows ">" ows filename)? {
         def filename
           get_spaced_node(:filename)
         end
         def single_commands
           res = [some_command.command_hash]
-          res += more.elements.map { |x| x.some_command.command_hash } if more
+          res += more.elements.map do |x| 
+            single = x.some_command.command_hash
+            single.inbound_pipe = x.pipe.text_value
+            single
+          end if more
           res
         end
         def command_hash
           LSL::Command::Compound.new(:commands => single_commands, :output_filename => filename.andand.text_value)
         end
       }
+    end
+    rule pipe
+      "|" / "^"
     end
     rule eval_str
       "{" (!"}" .)+ "}" {

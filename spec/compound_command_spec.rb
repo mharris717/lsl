@@ -39,6 +39,9 @@ describe "CompoundCommand" do
   it 'many pipes' do
     parse("cp a b | cp c d | cp e f | cp g h").command_hash.commands.size.should == 4
   end
+  it 'inbound pipe' do
+    parse("cp a b ^ cp c d").command_hash.commands.last.inbound_pipe.should == '^'
+  end
   describe "execution" do
     it "each_command args" do
       res = []

@@ -45,6 +45,10 @@ describe "Shell" do
     run("pipe a b | cc _ x").result.should == ['xa','xb']
     run("echo a | cc _ x").result.should == 'xa'
   end
+  it 'splat pipe' do
+    run('pipe a b | echo').result.should == ['a','b']
+    run('pipe a b ^ echo').result.should == 'a b'
+  end
 
   describe 'output redirection' do
     before do

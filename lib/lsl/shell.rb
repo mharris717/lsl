@@ -23,7 +23,7 @@ module LSL
         ops = (args.last.kind_of?(Hash) ? args.pop : {})
         str = args.join(" ")
         str = str.upcase if ops.has_key?('upper')
-        puts str
+        #puts str
         str
       end
       def echot(*args)
@@ -90,6 +90,15 @@ module LSL
       end
       def column(arr,a,b)
         arr.map { |x| x[a.to_i..b.to_i].andand.strip }
+      end
+      def sum(*args)
+        args.flatten.inject(0.0) { |s,i| s + i.to_f }
+      end
+      def sumt(*args)
+        args.flatten.inject { |s,i| s + (i.kind_of?(String) ? i.to_f : i) }
+      end
+      def remove(str,c)
+        str.gsub(c,"").strip
       end
         
     end

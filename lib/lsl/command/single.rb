@@ -1,7 +1,7 @@
 module LSL
   module Command
     class Single
-      attr_accessor :ex, :args, :options, :raw
+      attr_accessor :ex, :args, :options, :raw, :inbound_pipe
       include FromHash
       def eval?
         raw[0..0] == "{"

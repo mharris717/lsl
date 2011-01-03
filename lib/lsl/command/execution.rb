@@ -67,9 +67,11 @@ module LSL
           end
           res
         elsif obj.respond_to?(command.method)
-          res = obj.send_with_expansion(command.method,*args)
-          #puts "RES #{res.inspect}" if res
-          res
+          if command.inbound_pipe == '^'
+            obj.send(command.method,*args)
+          else
+            obj.send_with_expansion(command.method,*args)
+          end
         else
           `#{command.raw}`.output_to_array
         end

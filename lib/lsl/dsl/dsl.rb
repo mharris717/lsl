@@ -12,6 +12,11 @@ module LSL
           LSL::Completion::Base.instance.mappings.add(c)
         end
       end
+      def mapping(n,&b)
+        LSL::ShellLike.send(:define_method,n) do |*args|
+          b.call
+        end
+      end
     end
   end
 end
