@@ -11,27 +11,11 @@ class Array
       end
     end
   end
-  def under_combine(a)
-    res = []
-    each do |x|
-      if x == '_'
-        raise "foo" if a.empty?
-        res << a.shift
-      else
-        res << x
-      end
-    end
-    res + a
-  end
 end
 
 class Object
   def array_aware_each(&b)
-    if kind_of?(Array)
-      each(&b)
-    else
-      yield(self)
-    end
+    [self].flatten.each(&b)
   end
   def send_with_expansion(sym,*args,&b)
     return send(sym,&b) if args.empty?
@@ -118,8 +102,11 @@ module LSL
         if command.output_filename
           ::File.create(command.output_filename,result.join("\n"))
         else
-          puts result_str if result
+          #puts result_str if result
         end
+      end
+      def print!
+        puts result_str if result
       end
       def result
         command_executions.last.result

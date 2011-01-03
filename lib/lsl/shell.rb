@@ -85,6 +85,13 @@ module LSL
       def sub(a,b,arg)
         arg[a.to_i..b.to_i]
       end
+      def crop_top(arr,i)
+        arr[i.to_i..-1]
+      end
+      def column(arr,a,b)
+        arr.map { |x| x[a.to_i..b.to_i].andand.strip }
+      end
+        
     end
     include FileUtils
     include Inner
@@ -96,10 +103,14 @@ module LSL
   end
 
   class Shell
+    class << self
+      fattr(:instance) { new }
+    end
+    attr_accessor :last_execution
     fattr(:env) { LSL::CommandEnv.new }
     fattr(:parser) { LSL::CompoundCommandParser.new }
     def run(str)
-      LSL::CommandExecution::Compound.new(:command_str => str, :shell => self).tap { |x| x.run! }
+      self.last_execution = LSL::CommandExecution::Compound.new(:command_str => str, :shell => self).tap { |x| x.run! }
     end
     def get_input
       #STDIN.gets.strip
@@ -108,16 +119,16 @@ module LSL
     end
     def run_loop
       loop do
-        print 
         str = get_input
         run(str)
+        last_execution.print!
       end
     end
   end
 end
 
 def run_shell!(obj=nil)
-  s = LSL::Shell.new
+  s = LSL::Shell.instance
   s.env = obj if obj
   s.run_loop
 end

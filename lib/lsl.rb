@@ -6,7 +6,7 @@ require 'mharris_ext'
   require File.dirname(__FILE__) + "/lsl/grammars/#{g}"
 end
 
-%w(args single compound execution).each do |f|
+%w(args single compound execution completion).each do |f|
   require File.dirname(__FILE__) + "/lsl/command/#{f}"
 end
 
