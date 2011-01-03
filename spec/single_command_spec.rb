@@ -76,6 +76,7 @@ describe "Command" do
     it 'raw string' do
       parse("cp a b").command_hash.raw.should == 'cp a b'
     end
+
   end
   
 end

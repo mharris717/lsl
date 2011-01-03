@@ -20,6 +20,12 @@ describe "Quoting" do
   it "unquoted phrase" do
     parser.should_not be_parsed("abc xyz")
   end
+  it 'has unquoted method for quoted phrase' do
+    parser.parse('"abc xyz"').unquotedx.should == 'abc xyz'
+  end
+  it 'has unquoted method for unquoted word' do
+    parser.parse('abc').unquotedx.should == 'abc'
+  end
   #it "escaped quotes"
 end
 

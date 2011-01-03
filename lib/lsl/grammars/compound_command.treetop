@@ -3,22 +3,17 @@ module LSL
     include LSL::SingleCommand
     include LSL::File
     rule full_command
-      some_command (ows "|" ows some_command)* (ows ">" ows filename)? {
+      some_command more:(ows "|" ows some_command)* spaced_filename:(ows ">" ows filename)? {
         def filename
-          find_child_node(:filename)
+          get_spaced_node(:filename)
         end
         def single_commands
-          
           res = [some_command.command_hash]
-          #res = [elements.first.command_hash]
-          rest = find_child_nodes(:some_command).map { |x| x.command_hash }
-          #puts "rest #{rest.size}"
-          res + rest
+          res += more.elements.map { |x| x.some_command.command_hash } if more
+          res
         end
         def command_hash
-          res = LSL::Command::Compound.new(:commands => single_commands)
-          res.output_filename = filename.text_value if filename
-          res
+          LSL::Command::Compound.new(:commands => single_commands, :output_filename => filename.andand.text_value)
         end
       }
     end

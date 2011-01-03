@@ -36,6 +36,9 @@ describe "CompoundCommand" do
     c.ex.should == 'ls'
     c.args.should == ['c','d']
   end
+  it 'many pipes' do
+    parse("cp a b | cp c d | cp e f | cp g h").command_hash.commands.size.should == 4
+  end
   describe "execution" do
     it "each_command args" do
       res = []

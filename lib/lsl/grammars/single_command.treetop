@@ -3,16 +3,16 @@ module LSL
     include LSL::Quoting
     include LSL::List
     rule single_command
-      ex (ws args)? (ws options)? {
+      ex spaced_args:(ws args)? spaced_options:(ws options)? {
         def args
-          find_child_node(:args)
+          get_spaced_node(:args)
         end
         def options
-          find_child_node(:options)
+          get_spaced_node(:options)
         end
         def command_hash
           LSL::Command::Single.new(:raw => text_value, :ex => ex.text_value, 
-                               :args => args.andand.list_values || [], :options => options.andand.hash_values || {})
+                               :args => args.andand.arg_values || [], :options => options.andand.hash_values || {})
         end
       }
     end
@@ -25,29 +25,27 @@ module LSL
       comma_list
     end
     rule args
-      arg (ws arg)*
+      arg spaced_args:(ws args)? {
+        def arg_values
+          [arg.unquotedx] + (get_spaced_node(:args).andand.arg_values || [])
+        end
+      }
     end
     
     rule option_flag
-      '-' word
+      '-' 1..2 word
     end
     rule option
-      option_flag (ws optionally_quoted_string)? {
+      option_flag spaced_option_value:(ws option_value:optionally_quoted_string)? {
         def kv
-          n = find_child_node2(:optionally_quoted_string)
-          {option_flag.word.text_value => n.andand.text_value}
+          {option_flag.word.text_value => get_spaced_node(:option_value).andand.unquotedx}
         end
       }
     end
     rule options
-      option (ws option)* {
+      option spaced_options:(ws options)? {
         def hash_values
-          res = option.kv
-          elements[1..-1].each do |e|
-            n = e.find_child_node2(:option)
-            res = res.merge(n.kv) if n
-          end
-          res
+          option.kv.merge(get_spaced_node(:options).andand.hash_values || {})
         end
       }
     end

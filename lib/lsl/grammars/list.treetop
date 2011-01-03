@@ -2,7 +2,11 @@ module LSL
   grammar List
     include LSL::Base
     rule comma_list
-      optionally_quoted_string ("," comma_list)*
+      optionally_quoted_string ("," comma_list)* {
+        def unquotedx
+          optionally_quoted_string.unquotedx
+        end
+      }
     end
   end
 end

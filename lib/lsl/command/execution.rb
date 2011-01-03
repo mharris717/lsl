@@ -11,6 +11,18 @@ class Array
       end
     end
   end
+  def under_combine(a)
+    res = []
+    each do |x|
+      if x == '_'
+        raise "foo" if a.empty?
+        res << a.shift
+      else
+        res << x
+      end
+    end
+    res + a
+  end
 end
 
 class Object
@@ -51,24 +63,10 @@ module LSL
         m = LSL::Mapping.new
         m.method(command) || simple_obj
       end
-      fattr(:command_args) do
-        res = command.args
-        res << [command.options] unless command.options.empty?
-        res
-      end
-      def fixed_input_args
-        return [] unless input_args
-        return [] if input_args.respond_to?("empty?") && input_args.empty?
-        res = input_args
-        res = [res] unless res.kind_of?(Array)
-        #puts "ia #{res.inspect}"
-        res
-        [res]
-      end
       fattr(:args) do
-        command_args + fixed_input_args
+        LSL::CommandExecution::Args.new(:list => [command.args, [input_args]], :options => command.options).flat_args
       end
-      def my_eval(ops,str)
+      def my_eval(str,ops)
         OpenStruct.new(ops).instance_eval(str)
       rescue => exp
         puts "failed #{exp.message}"
@@ -83,7 +81,6 @@ module LSL
               res << my_eval(command.raw[1..-2],:args => a, :arg => a.first)
             end
           end
-          #puts res.inspect
           res
         elsif obj.respond_to?(command.method)
           res = obj.send_with_expansion(command.method,*args)
@@ -113,7 +110,8 @@ module LSL
       end
       def run!
         if !command
-          puts "can't parse"
+          #puts "|#{command_str}|"
+          puts "can't parsex"
           return
         end
         command_executions

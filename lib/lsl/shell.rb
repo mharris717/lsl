@@ -15,13 +15,16 @@ $printed ||= []
 module LSL
   module ShellLike
     module Inner
+      def pipe(*args)
+        args
+      end
       def echo(*args)
         #puts args.inspect
         ops = (args.last.kind_of?(Hash) ? args.pop : {})
         str = args.join(" ")
         str = str.upcase if ops.has_key?('upper')
         puts str
-        nil
+        str
       end
       def echot(*args)
         echo(*args)
@@ -47,6 +50,7 @@ module LSL
         puts a.length * b.length
       end
       def cc(*args)
+        puts "cc args #{args.inspect}"
         args.reverse.join("")
       end
       def la(*args)
@@ -68,6 +72,19 @@ module LSL
       def pt(a,b)
         puts a==b
       end
+      def get(url)
+        require 'open-uri'
+        open(url).read
+      end
+      def p(*args)
+        ec "python -c " + args.join(" ")
+      end
+      def without_left(n,arg)
+        arg[n.to_i..-1]
+      end
+      def sub(a,b,arg)
+        arg[a.to_i..b.to_i]
+      end
     end
     include FileUtils
     include Inner
@@ -85,11 +102,13 @@ module LSL
       LSL::CommandExecution::Compound.new(:command_str => str, :shell => self).tap { |x| x.run! }
     end
     def get_input
-      STDIN.gets.strip
+      #STDIN.gets.strip
+      require 'readline'
+      Readline.readline("#{Dir.getwd}> ",true).strip
     end
     def run_loop
       loop do
-        print "#{Dir.getwd}> "
+        print 
         str = get_input
         run(str)
       end

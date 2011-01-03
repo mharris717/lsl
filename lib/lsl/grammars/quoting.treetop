@@ -2,10 +2,21 @@ module LSL
   grammar Quoting
     include LSL::Base
     rule optionally_quoted_string
-      quoted_string / word
+      quoted_string / unquoted_word
+    end
+    rule unquoted_word
+      word {
+        def unquotedx
+          text_value
+        end
+      }
     end
     rule quoted_string
-      '"' quoteless_string '"'
+      '"' quoteless_string '"' {
+        def unquotedx
+          quoteless_string.text_value
+        end
+      }
     end
     rule quoteless_string
       (!'"' . quoteless_string) / ""
