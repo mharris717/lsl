@@ -55,7 +55,6 @@ module LSL
         return res.options if res
         LSL::Completion::Mapping.file_matcher.options
       end
-      
     end
     class Instance
       include FromHash
