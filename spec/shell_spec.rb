@@ -14,7 +14,7 @@ describe "Shell" do
   end
   it 'piping' do
     @shell.run('ls VERSION | pf')
-    $printed.should == ['0.1.1']
+    ($printed.strip =~ /^[0-9]\.[0-9]\.\[0-9]$/).should be
   end
   it 'foo' do
     #30.times do
