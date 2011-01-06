@@ -13,8 +13,9 @@ describe "Shell" do
     @shell.run("ls VERSIONX").result.should == []
   end
   it 'piping' do
-    @shell.run('ls VERSION | pf')
-    ($printed.strip =~ /^[0-9]\.[0-9]\.\[0-9]$/).should be
+    res = @shell.run('ls VERSION | cat').result
+    version_regex = /^[0-9]\.[0-9]\.[0-9]$/
+    (res =~ version_regex).should be
   end
   it 'foo' do
     #30.times do

@@ -7,23 +7,27 @@ class String
 end
 
 def ec_array(cmd)
-  `#{cmd}`.output_to_array
+  LSL.my_ec(cmd).output_to_array
 end
 
-
-$printed ||= []
 module LSL
+  def self.is_windows?
+    processor, platform, *rest = RUBY_PLATFORM.split("-")
+    platform == 'mswin32' || platform == 'mingw32'
+  end
+  def self.my_ec(cmd)
+    cmd = cmd.gsub(/^ls/,"dir /B") if LSL.is_windows?
+    `#{cmd}`
+  end
   module ShellLike
     module Inner
       def pipe(*args)
         args
       end
       def echo(*args)
-        #puts args.inspect
         ops = (args.last.kind_of?(Hash) ? args.pop : {})
         str = args.join(" ")
         str = str.upcase if ops.has_key?('upper')
-        #puts str
         str
       end
       def echot(*args)
@@ -33,10 +37,8 @@ module LSL
       def ls(d=".")
         ec_array "ls #{d}"
       end
-      def pf(f)
-        str = ::File.read(f)
-        $printed << str
-        puts str
+      def cat(f)
+        ::File.read(f)
       end
       def foo
         ["foo"]
@@ -50,7 +52,6 @@ module LSL
         puts a.length * b.length
       end
       def cc(*args)
-        puts "cc args #{args.inspect}"
         args.reverse.join("")
       end
       def la(*args)
