@@ -22,7 +22,7 @@ module LSL
       }
     end
     rule pipe
-      "|" / "^"
+      "|" / "^" / "$"
     end
     rule eval_str
       "{" (!"}" .)+ "}" {

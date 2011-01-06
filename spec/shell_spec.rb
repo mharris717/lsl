@@ -1,52 +1,55 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-
+  def mit(name,&b)
+    it(name,&b) #if name == 'piping'
+  end
 describe "Shell" do
+
   before do
     @shell = LSL::Shell.new
   end
   def run(*args); @shell.run(*args); end
-  it 'smoke' do
+  mit 'smoke' do
     2.should == 2
   end
-  it 'simple' do
+  mit 'simple' do
     @shell.run("ls VERSION").result.should == ['VERSION']
     @shell.run("ls VERSIONX").result.should == []
   end
-  it 'piping' do
+  mit 'piping' do
+    with_debug do
     res = @shell.run('ls VERSION | cat').result
     version_regex = /^[0-9]\.[0-9]\.[0-9]$/
-    (res =~ version_regex).should be
+    res.should =~ version_regex
   end
-  it 'foo' do
-    #30.times do
-      #@shell.run("foo | echo")
-    #end
+  end
+  mit 'foo' do
+    
     run("ls VERSION | longest").result.should == 'VERSION'
     run("ls VERSION | longest abc").result.should == 'VERSION'
     run("ls VERSION | longest abc abcdefgh").result.should == 'abcdefgh'
   end
-  it 'star arg' do
+  mit 'star arg' do
     run("ls Gemfile*").result.should == ['Gemfile','Gemfile.lock']
   end
-  it 'remote call' do
+  mit 'remote call' do
     #run("remote_call foo").result.should == 'rc'
     #run("remote_call foo | echo")
   end
-  it 'rake' do
+  mit 'rake' do
     #run("abc").result.should == "ran"
   end
-  it 'eval' do
+  mit 'eval' do
     run("{2 + 2}").result.should == [4]
   end
-  it 'underscore' do
+  mit 'underscore' do
     run("echo \"Gemfile*\" | ls").result.should == ['Gemfile','Gemfile.lock']
     run("echo \"Gemfile*\" | ls _").result.should == ['Gemfile','Gemfile.lock']
   end
-  it 'underscore 2' do
+  mit 'underscore 2' do
     run("pipe a b | cc _ x").result.should == ['xa','xb']
     run("echo a | cc _ x").result.should == 'xa'
   end
-  it 'splat pipe' do
+  mit 'splat pipe' do
     run('pipe a b | echo').result.should == ['a','b']
     run('pipe a b ^ echo').result.should == 'a b'
   end
@@ -56,7 +59,7 @@ describe "Shell" do
       @file = "spec/mock_dir/output.txt"
       eat_exceptions { FileUtils.rm @file }
     end
-    it "foo" do
+    mit "foo" do
       run("ls VERSION > #{@file}")
       File.read(@file).should == "VERSION"
     end

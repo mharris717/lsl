@@ -22,6 +22,10 @@ end
   require File.dirname(__FILE__) + "/lsl/#{f}"
 end
 
+%w(base).each do |f|
+  require File.dirname(__FILE__) + "/lsl/operator/#{f}"
+end
+
 %w(dsl).each do |f|
   f = File.expand_path(File.dirname(__FILE__)) + "/lsl/dsl/#{f}"
   #puts f

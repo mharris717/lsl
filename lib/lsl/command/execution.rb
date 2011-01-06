@@ -14,8 +14,11 @@ class Array
 end
 
 class Object
+  def to_array_if_not
+    kind_of?(Array) ? self : [self]
+  end
   def array_aware_each(&b)
-    [self].flatten.each(&b)
+    to_array_if_not.each(&b)
   end
   def send_with_expansion(sym,*args,&b)
     return send(sym,&b) if args.empty?
@@ -67,11 +70,7 @@ module LSL
           end
           res
         elsif obj.respond_to?(command.method)
-          if command.inbound_pipe == '^'
-            obj.send(command.method,*args)
-          else
-            obj.send_with_expansion(command.method,*args)
-          end
+          obj.send(command.method,*args)
         else
           `#{command.raw}`.output_to_array
         end
@@ -82,29 +81,55 @@ module LSL
         puts "command failed #{exp.message}"
       end
     end
+    class Result
+      include FromHash
+      include Enumerable
+      fattr(:command_executions) { [] }
+      def <<(x)
+        self.command_executions << x
+      end
+      def each(&b)
+        self.command_executions.each(&b)
+      end
+      def result
+        res = command_executions.map { |x| x.result }
+        (res.size == 1) ? res.first : res
+      end
+      def result_str
+        res = result
+        res = res.join("\n") if res.respond_to?(:join)
+        res
+      end
+      def flatten
+        raise "flatten"
+      end
+    end
     class Compound < Base
       fattr(:command) { shell.parser.parse(command_str).andand.command_hash }
       fattr(:command_executions) do
         exes = []
-        input_args = lambda { exes.last.andand.result || [] }
         command.each_command do |c,args|
-          c = LSL::CommandExecution::Single.new(:shell => shell, :command => c, :input_args => input_args[])
-          c.run!
-          exes << c
+          op = LSL::Operator.get(:prev_command => exes.last.andand.first, :next_command => c)
+          ex_group = LSL::CommandExecution::Result.new
+          op.call do |*args|
+            cex = LSL::CommandExecution::Single.new(:shell => shell, :command => c, :input_args => args)
+            cex.run!
+            ex_group << cex
+          end
+          exes << ex_group
         end
         exes
       end
       def run!
         if !command
-          #puts "|#{command_str}|"
-          puts "can't parsex"
+          puts "can't parse"
           return
         end
         command_executions
         if command.output_filename
           ::File.create(command.output_filename,result.join("\n"))
         else
-          #puts result_str if result
+          # do nothing, printing happens in input loop
         end
       end
       def print!
@@ -114,9 +139,7 @@ module LSL
         command_executions.last.result
       end
       def result_str
-        res = result
-        res = res.join("\n") if res.respond_to?(:join)
-        res
+        command_executions.last.result_str
       end
     end
   end

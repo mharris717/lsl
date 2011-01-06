@@ -17,6 +17,9 @@ module LSL
           b.call(*args)
         end
       end
+      def operator(*args,&b)
+        LSL::Operator.add(*args,&b)
+      end
     end
   end
 end

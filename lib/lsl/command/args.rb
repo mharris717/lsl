@@ -33,7 +33,7 @@ module LSL
           res.add_list(a)
         end
         res << options unless options.empty?
-        res.list
+        res.list.flatten
       end
       def each(&b)
         flat_args.each(&b)

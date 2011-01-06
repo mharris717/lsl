@@ -17,6 +17,20 @@ class Object
 end
 
 class Object
+  def class_inspect_inner
+    return klass unless kind_of?(Array)
+    map { |x| x.class_inspect_inner }
+  end
+  def class_inspect
+    return class_inspect_inner unless kind_of?(Array)
+    map { |x| x.class_inspect_inner }.inspect
+  end
+  def klass
+    self.class
+  end
+end
+
+class Object
   def send_if_respond(meth)
     respond_to?(meth) ? send(meth) : nil
   end
