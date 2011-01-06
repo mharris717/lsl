@@ -14,7 +14,7 @@ module LSL
       end
       def mapping(n,&b)
         LSL::ShellLike.send(:define_method,n) do |*args|
-          b.call
+          b.call(*args)
         end
       end
     end
