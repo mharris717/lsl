@@ -1,0 +1,11 @@
+module LSL
+  grammar NoEx
+    include LSL::CompoundCommand
+    rule top_rule
+      full_command
+    end
+    rule some_command
+      after_ex
+    end
+  end
+end

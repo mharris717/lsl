@@ -1,0 +1,22 @@
+module LSL
+  grammar Any
+    include LSL::CompoundCommand
+    rule top_rule
+      full_command
+    end
+    rule pipe_with_ws
+      ws pipe ws
+    end
+    rule non_pipe
+      (!pipe_with_ws .)+
+    end
+    rule some_command
+      non_pipe {
+        def command_hash
+          LSL::Command::Single.new(:raw => text_value, :ex => LSL::Shell.instance.default_command, 
+                               :args => [text_value], :options => {})
+        end
+      }
+    end
+  end
+end

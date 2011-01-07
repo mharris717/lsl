@@ -3,16 +3,14 @@ module LSL
     include LSL::SingleCommand
     include LSL::File
     rule full_command
-      some_command more:(ows pipe ows some_command)* spaced_filename:(ows ">" ows filename)? {
+      some_command more:(ws pipe ws some_command)* spaced_filename:(ows ">" ows filename)? {
         def filename
           get_spaced_node(:filename)
         end
         def single_commands
           res = [some_command.command_hash]
           res += more.elements.map do |x| 
-            single = x.some_command.command_hash
-            single.inbound_pipe = x.pipe.text_value
-            single
+            x.some_command.command_hash.tap { |ch| ch.inbound_pipe = x.pipe.text_value }
           end if more
           res
         end

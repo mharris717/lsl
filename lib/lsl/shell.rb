@@ -104,6 +104,9 @@ module LSL
       def len(*args)
         args.length
       end
+      def default(cmd)
+        LSL::Shell.instance.default_command = cmd
+      end
         
     end
     include FileUtils
@@ -120,8 +123,15 @@ module LSL
       fattr(:instance) { new }
     end
     attr_accessor :last_execution
+    attr_accessor :default_command
     fattr(:env) { LSL::CommandEnv.new }
-    fattr(:parser) { LSL::CompoundCommandParser.new }
+    def parser
+      if default_command
+        LSL::AnyParser.new
+      else
+        LSL::CompoundCommandParser.new 
+      end
+    end
     def run(str)
       self.last_execution = LSL::CommandExecution::Compound.new(:command_str => str, :shell => self).tap { |x| x.run! }
     end

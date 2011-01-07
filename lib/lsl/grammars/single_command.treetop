@@ -3,7 +3,21 @@ module LSL
     include LSL::Quoting
     include LSL::List
     rule single_command
-      ex spaced_args:(ws args)? spaced_options:(ws options)? {
+      ex spaced_after_ex:(ws after_ex)? {
+        def args
+          get_spaced_node(:after_ex).andand.args
+        end
+        def options
+          get_spaced_node(:after_ex).andand.options
+        end
+        def command_hash
+          LSL::Command::Single.new(:raw => text_value, :ex => ex.text_value, 
+                               :args => args.andand.arg_values || [], :options => options.andand.hash_values || {})
+        end
+      }
+    end
+    rule after_ex
+      spaced_args:(ws* args)? spaced_options:(ws* options)? {
         def args
           get_spaced_node(:args)
         end
@@ -11,7 +25,7 @@ module LSL
           get_spaced_node(:options)
         end
         def command_hash
-          LSL::Command::Single.new(:raw => text_value, :ex => ex.text_value, 
+          LSL::Command::Single.new(:raw => text_value, :ex => nil, 
                                :args => args.andand.arg_values || [], :options => options.andand.hash_values || {})
         end
       }
