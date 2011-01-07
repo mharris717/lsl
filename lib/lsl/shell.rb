@@ -101,6 +101,9 @@ module LSL
       def remove(str,c)
         str.gsub(c,"").strip
       end
+      def len(*args)
+        args.length
+      end
         
     end
     include FileUtils

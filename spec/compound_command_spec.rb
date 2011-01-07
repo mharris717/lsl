@@ -42,6 +42,9 @@ describe "CompoundCommand" do
   it 'inbound pipe' do
     parse("cp a b ^ cp c d").command_hash.commands.last.inbound_pipe.should == '^'
   end
+  it 'multi char pipe' do
+   parse_obj("echo foo |* echo bar").should be
+  end
   describe "execution" do
     it "each_command args" do
       res = []

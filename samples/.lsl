@@ -10,5 +10,5 @@ LSL.configure do |s|
     num.to_i * 2
   end
   
-  s.operator "$",Star
+  s.operator "|*",Star
 end
