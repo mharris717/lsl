@@ -32,14 +32,25 @@ end
   require f
 end
 
-def load_config!
-  f = ENV['HOME'] + "/.lsl"
-  if FileTest.exist?(f)
-    eval(File.read(f))
+module LSL
+  class Config
+    class << self
+      def load!
+        new(:filename => ENV['HOME'] + "/.lsl").load!
+        new(:filename => Dir.getwd + "/.lsl").load!
+      end
+    end
+    include FromHash
+    attr_accessor :filename
+    def load!
+      if FileTest.exist?(filename)
+        eval(::File.read(filename))
+      end
+    end
   end
 end
 
-load_config!
+LSL::Config.load!
 
 module LSL
   module ExecutionStrategy
