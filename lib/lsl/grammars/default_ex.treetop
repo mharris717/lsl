@@ -11,9 +11,10 @@ module LSL
       (!pipe_with_ws .)+
     end
     rule some_command
-      non_pipe {
+      spaced_ex:("." ex)? non_pipe {
         def command_hash
-          LSL::Command::Single.new(:raw => text_value, :ex => LSL::Shell.instance.default_command, 
+          e = get_spaced_node(:ex).andand.text_value || LSL::Shell.instance.default_command
+          LSL::Command::Single.new(:raw => text_value, :ex => e, 
                                :args => [text_value], :options => {})
         end
       }

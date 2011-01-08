@@ -10,5 +10,13 @@ LSL.configure do |s|
     num.to_i * 2
   end
   
+  s.alias :em do
+    default 'eval', 'a'
+  end
+  
   s.operator "|*",Star
+  
+  s.operator "|!" do
+    puts "BANG"
+  end
 end

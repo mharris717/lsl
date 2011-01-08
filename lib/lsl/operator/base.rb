@@ -2,9 +2,16 @@ module LSL
   module Operator
     def self.get(ops)
       char = ops[:next_command].inbound_pipe || "START"
-      LSL::Operator::Mapping.instance.get(char).new(ops)
+      LSL::Operator::Mapping.instance.get(char).call(ops)
     end
-    def self.add(char,cls)
+    def self.add(char,cls=nil,&b)
+      if !cls
+        cls = lambda do |*args|
+          lambda do |&b|
+            b.call(*args,&b)
+          end
+        end
+      end
       LSL::Operator::Mapping.instance.ops[char.to_s] = cls
     end
     class Mapping
@@ -13,14 +20,16 @@ module LSL
       end
       fattr(:ops) { {} }
       def get(char)
-        char = char.to_s
-        ops[char] || (raise "no mapping for operator #{char}")
+        cls = ops[char] || (raise "no mapping for operator #{char}")
       end
     end
     class Base
       include FromHash
       fattr(:input_args) do
         (prev_command.result.andand.to_array_if_not || []).flatten
+      end
+      def self.call(*args)
+        new(*args)
       end
       attr_accessor :prev_command, :next_command
     end

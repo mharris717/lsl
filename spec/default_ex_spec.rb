@@ -21,4 +21,7 @@ describe "No Ex" do
   it 'foo' do
     parse("a b | c").command_hash.commands.map { |x| x.args }.should == [["a","b"],["c"]]
   end
+  it 'override ex' do
+    parse(".foo a b").command_hash.commands.first.ex.should == 'foo'
+  end
 end

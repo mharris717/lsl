@@ -25,7 +25,7 @@ module LSL
           get_spaced_node(:options)
         end
         def command_hash
-          LSL::Command::Single.new(:raw => text_value, :ex => nil, 
+          LSL::Command::Single.new(:raw => text_value, :ex => LSL::Shell.instance.default_command, 
                                :args => args.andand.arg_values || [], :options => options.andand.hash_values || {})
         end
       }

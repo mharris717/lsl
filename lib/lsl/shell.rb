@@ -64,8 +64,11 @@ module LSL
         puts "Exiting"
         Kernel.exit(*args)
       end
+      fattr(:eval_binding) { self.send(:binding) }
       def eval(*args)
-        Kernel.eval(args.join(" "))
+        #puts "in eval, #{args.inspect}"
+        Kernel.eval(args.join(" "),eval_binding)
+        #eval_obj.instance_eval(args.join(" "))
       end
       def rand
         Kernel.rand()
@@ -79,6 +82,11 @@ module LSL
       end
       def p(*args)
         ec "python -c " + args.join(" ")
+      end
+      def raked(*args)
+        args.each do |t|
+          Rake::Task[t].invoke
+        end
       end
       def without_left(n,arg)
         arg[n.to_i..-1]
@@ -104,8 +112,12 @@ module LSL
       def len(*args)
         args.length
       end
-      def default(cmd)
+      def default(cmd=nil,quote_mode=nil)
         LSL::Shell.instance.default_command = cmd
+        LSL::Shell.instance.quote_mode = quote_mode
+      end
+      def err
+        raise "error"
       end
         
     end
@@ -123,28 +135,43 @@ module LSL
       fattr(:instance) { new }
     end
     attr_accessor :last_execution
-    attr_accessor :default_command
+    attr_accessor :default_command, :quote_mode
     fattr(:env) { LSL::CommandEnv.new }
     def parser
       if default_command
-        LSL::AnyParser.new
+        quote_mode ? LSL::AnyParser.new : LSL::NoExParser.new
       else
         LSL::CompoundCommandParser.new 
       end
     end
     def run(str)
+      exit if str.to_s =~ /exit/
+      self.default_command = nil if str.to_s =~ /exit/ || str.to_s =~ /default/
       self.last_execution = LSL::CommandExecution::Compound.new(:command_str => str, :shell => self).tap { |x| x.run! }
+    end
+    def prompt
+      res = Dir.getwd
+      res += "|#{default_command}" if default_command
+      res += " qm" if quote_mode
+      res + "> "
     end
     def get_input
       #STDIN.gets.strip
       require 'readline'
-      Readline.readline("#{Dir.getwd}> ",true).strip
+      pr = 
+      Readline.readline(prompt,true).strip
+    end
+    def run_loop_once(str)
+      run(str)
+      last_execution.print!
+    rescue => exp
+      puts "Failed #{exp.message}"
+      puts exp.backtrace[0..2].join("\n")
     end
     def run_loop
       loop do
         str = get_input
-        run(str)
-        last_execution.print!
+        run_loop_once(str)
       end
     end
   end

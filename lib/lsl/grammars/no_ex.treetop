@@ -5,7 +5,14 @@ module LSL
       full_command
     end
     rule some_command
-      after_ex
+      spaced_ex:("." ex)? after_ex {
+        def command_hash
+          e = get_spaced_node(:ex).andand.text_value || LSL::Shell.instance.default_command
+          res = after_ex.command_hash
+          res.ex = e
+          res
+        end
+      }
     end
   end
 end

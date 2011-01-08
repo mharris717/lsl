@@ -17,6 +17,11 @@ module LSL
           b.call(*args)
         end
       end
+      def alias(n,&b)
+        LSL::ShellLike.send(:define_method,n) do |*args|
+          instance_eval(&b)
+        end
+      end
       def operator(*args,&b)
         LSL::Operator.add(*args,&b)
       end
