@@ -47,6 +47,44 @@ Note that currently (and confusingly), the term "mapping" is used.  The terminol
 
 ### To be continued
 
+## Operators
+
+An operator is a first-class entity.
+
+Users can define new operators in their .lsl file.
+
+    LSL.configure do |s|
+    
+      #this operator calls the next command twice
+      s.operator "|!" do
+        yield
+        yield
+      end
+    
+    end
+    
+### To be continued
+
+# Advanced Functionality
+
+## Default Mode
+
+LSL can be put into "default mode."  In this mode, an executable is defined as the default, and each command may omit the executable, specifying only arguments.  
+
+For example, by specifying "eval" as the default command, LSL can be used as a crude IRB.  
+
+### To be continued
+
+# Internals
+
+To define the syntax, LSL uses Treetop, a ruby parsing library.  In their own words: 
+
+*Treetop is a language for describing languages. Combining the elegance of Ruby with cutting-edge parsing expression grammars, it helps you analyze syntax with revolutionary ease.*
+
+By using a real parsing library, LSL's syntax should remain manageable and extendable.
+
+### To be continued
+
 ## Contributing to lsl
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
