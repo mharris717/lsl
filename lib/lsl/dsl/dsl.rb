@@ -17,6 +17,12 @@ module LSL
           b.call(*args)
         end
       end
+      def mapping_with_ops(n,&b)
+        LSL::ShellLike.send(:define_method,n) do |*args|
+          args << {} unless args.last.kind_of?(Hash)
+          b.call(*args)
+        end
+      end
       def alias(n,&b)
         LSL::ShellLike.send(:define_method,n) do |*args|
           instance_eval(&b)
