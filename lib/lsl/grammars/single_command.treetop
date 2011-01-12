@@ -41,7 +41,7 @@ module LSL
     rule args
       arg spaced_args:(ws args)? {
         def arg_values
-          [arg.unquotedx] + (get_spaced_node(:args).andand.arg_values || [])
+          [arg.unquotedx.to_parsed_obj] + (get_spaced_node(:args).andand.arg_values || [])
         end
       }
     end

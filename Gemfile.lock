@@ -6,6 +6,7 @@ GEM
     facets (2.8.4)
     fattr (2.1.0)
     git (1.2.5)
+    github-markup (0.5.3)
     jeweler (1.5.1)
       bundler (~> 1.0.0)
       git (>= 1.2.5)
@@ -16,6 +17,7 @@ GEM
     polyglot (0.3.1)
     rake (0.8.7)
     rcov (0.9.9)
+    rdiscount (1.6.5)
     rspec (2.1.0)
       rspec-core (~> 2.1.0)
       rspec-expectations (~> 2.1.0)
@@ -24,6 +26,9 @@ GEM
     rspec-expectations (2.1.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.1.0)
+    to_parsed_obj (0.1.0)
+      fattr
+      mharris_ext
     treetop (1.4.8)
       polyglot (>= 0.3.1)
 
@@ -34,8 +39,11 @@ PLATFORMS
 DEPENDENCIES
   andand
   bundler (~> 1.0.0)
+  github-markup
   jeweler (~> 1.5.1)
   mharris_ext
   rcov
+  rdiscount
   rspec (~> 2.1.0)
+  to_parsed_obj
   treetop

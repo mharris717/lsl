@@ -10,14 +10,23 @@ def ec_array(cmd)
   LSL.my_ec(cmd).output_to_array
 end
 
+def ec_all(cmd)
+  cmd = "#{cmd} 2>&1"
+  `#{cmd}`
+end
+
 module LSL
   def self.is_windows?
     processor, platform, *rest = RUBY_PLATFORM.split("-")
     platform == 'mswin32' || platform == 'mingw32'
   end
   def self.my_ec(cmd)
-    cmd = cmd.gsub(/^ls/,"dir /B") if LSL.is_windows?
-    `#{cmd}`
+    if LSL.is_windows? && cmd =~ /^ls/
+      cmd = cmd.gsub(/^ls/,"dir /B") 
+      ec_all(cmd).gsub(/File Not Found/i,"")
+    else
+      ec_all(cmd)
+    end
   end
   module ShellLike
     module Inner
@@ -101,10 +110,10 @@ module LSL
         arr.map { |x| x[a.to_i..b.to_i].andand.strip }
       end
       def sum(*args)
-        args.flatten.inject(0.0) { |s,i| s + i.to_f }
+        args.flatten.inject(0.0) { |s,i| s + i }
       end
       def sumt(*args)
-        args.flatten.inject { |s,i| s + (i.kind_of?(String) ? i.to_f : i) }
+        args.flatten.inject { |s,i| s + i }
       end
       def remove(str,c)
         str.gsub(c,"").strip
@@ -158,7 +167,6 @@ module LSL
     def get_input
       #STDIN.gets.strip
       require 'readline'
-      pr = 
       Readline.readline(prompt,true).strip
     end
     def run_loop_once(str)
