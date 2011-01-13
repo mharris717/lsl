@@ -34,6 +34,7 @@ The executable can be any of the following
 
 If a command uses an executable that has not been defined, LSL attempts to "fall through" and execute the raw text of the command at the shell.  
 The goal is to allow users to use LSL as a "shell replacement" by adding functionality on top of the shell, without obscuring any existing shell functionality.  
+*The plan is to allow the "fall through" to be configurable, so that commands could fall through to ruby instead of the shell, for example*
 
 LSL includes some built in executables that are often useful.  Users can define their own executables in a .lsl file.  
 Note that currently (and confusingly), the term "mapping" is used.  The terminology will be standardized in the near future.
@@ -63,7 +64,25 @@ Users can define new operators in their .lsl file.
     
     end
     
+Operators are passed the previous command, and a list of input arguments output from the previous command.  
+They parse those inputs in whatever manner they see fit, and call the following command with the appropriate arguments.  
+
+Examples:
+
+* An operator that passes along the args as is
+* An operator that passes no arguments, but executes the next command
+* An operator that executes following commands only if the result of the previous command meets a given condition.
+* An operator that skips the next command if the result of the previous command meets a given condition.
+
+All these operators can be defined and added in several lines of code.
+
 ### To be continued
+
+## Configuration
+
+Configuration is done through an .lsl file.  
+.lsl files can be placed in the user's home directory, or in any directory on the filesystem; LSL will look for both files.  
+This means that one can define different behavior for different directories.
 
 # Advanced Functionality
 
@@ -75,13 +94,20 @@ For example, by specifying "eval" as the default command, LSL can be used as a c
 
 ### To be continued
 
+# Plugins
+
+Since LSL is defined in Ruby code, it can be extended with any ruby code, including gems.
+To extend LSL, a gem simply calls LSL.configure.  By requiring the gem in your .lsl file, it's enhancements are automatically loaded into your environment.  
+
+### To be continued
+
 # Internals
 
 To define the syntax, LSL uses Treetop, a ruby parsing library.  In their own words: 
 
 *Treetop is a language for describing languages. Combining the elegance of Ruby with cutting-edge parsing expression grammars, it helps you analyze syntax with revolutionary ease.*
 
-By using a real parsing library, LSL's syntax should remain manageable and extendable.
+By using a real parsing library, LSL's syntax will remain manageable and extendable.
 
 ### To be continued
 
