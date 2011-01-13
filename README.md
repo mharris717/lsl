@@ -94,14 +94,14 @@ For example, by specifying "eval" as the default command, LSL can be used as a c
 
 ### To be continued
 
-# Plugins
+## Plugins
 
 Since LSL is defined in Ruby code, it can be extended with any ruby code, including gems.
 To extend LSL, a gem simply calls LSL.configure.  By requiring the gem in your .lsl file, it's enhancements are automatically loaded into your environment.  
 
 ### To be continued
 
-# Internals
+## Internals
 
 To define the syntax, LSL uses Treetop, a ruby parsing library.  In their own words: 
 
