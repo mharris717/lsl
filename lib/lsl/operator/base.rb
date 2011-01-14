@@ -1,3 +1,5 @@
+# want operator to have ability to modify following command
+
 module LSL
   module Operator
     def self.get(ops)

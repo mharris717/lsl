@@ -6,6 +6,10 @@ class Star < LSL::Operator::Base
 end
 
 LSL.configure do |s|
+  s.mapping_with_ops :concatm do |*args|
+    ops = args.pop
+    args.join(ops[:sep]||ops['sep']||'')
+  end
   s.mapping :ms do |num|
     num.to_i * 2
   end
