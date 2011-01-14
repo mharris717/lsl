@@ -3,6 +3,9 @@ module LSL
     rule word
       [0-9a-zA-Z\.\/\\:\*_\+]+
     end
+    rule alphanum
+      [0-9a-zA-Z]
+    end
     rule ws1
       ' '
     end

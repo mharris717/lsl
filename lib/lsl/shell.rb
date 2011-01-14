@@ -1,20 +1,5 @@
 require 'fileutils'
 
-class String
-  def output_to_array
-    split("\n").select { |x| x.present? }.map { |x| x.strip }
-  end
-end
-
-def ec_array(cmd)
-  LSL.my_ec(cmd).output_to_array
-end
-
-def ec_all(cmd)
-  cmd = "#{cmd} 2>&1"
-  `#{cmd}`
-end
-
 module LSL
   def self.is_windows?
     processor, platform, *rest = RUBY_PLATFORM.split("-")
@@ -34,7 +19,7 @@ module LSL
         args
       end
       def echo(*args)
-        ops = (args.last.kind_of?(Hash) ? args.pop : {})
+        ops = args.pop_ops
         str = args.join(" ")
         str = str.upcase if ops.has_key?('upper')
         str
@@ -128,6 +113,12 @@ module LSL
       def err
         raise "error"
       end
+      def create_file(filename,str)
+        ::File.create(filename,str)
+      end
+      def append_file(filename,str)
+        ::File.append(filename,str)
+      end
         
     end
     include FileUtils
@@ -165,7 +156,6 @@ module LSL
       res + "> "
     end
     def get_input
-      #STDIN.gets.strip
       require 'readline'
       Readline.readline(prompt,true).strip
     end

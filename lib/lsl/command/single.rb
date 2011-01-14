@@ -19,6 +19,10 @@ module LSL
         a = ex.split(".")
         (a.size > 1) ? eval(a.first) : nil
       end
+      def push_ex(new_ex)
+        self.args = [ex] + args
+        self.ex = new_ex
+      end
     end
   end
 end

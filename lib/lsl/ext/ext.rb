@@ -90,3 +90,24 @@ class Object
     attr_writer meth
   end
 end
+
+class Array
+  def pop_ops
+    last.kind_of?(Hash) ? pop : {}
+  end
+end
+
+class Array
+  attr_accessor :raw_str
+  def raw_str
+    raise "no raw str" unless @raw_str.present?
+    @raw_str
+  end
+end
+
+class Hash
+  def to_indifferent
+    #HashWithIndifferentAccess.new(self)
+    self
+  end
+end

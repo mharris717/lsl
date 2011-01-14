@@ -111,6 +111,7 @@ module LSL
         command.each_command do |c,args|
           op = LSL::Operator.get(:prev_command => exes.last.andand.first, :next_command => c)
           ex_group = LSL::CommandExecution::Result.new
+          op.before_call
           op.call do |*args|
             cex = LSL::CommandExecution::Single.new(:shell => shell, :command => c, :input_args => args)
             cex.run!

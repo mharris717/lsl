@@ -11,7 +11,7 @@ end
   require File.dirname(__FILE__) + "/lsl/command/#{f}"
 end
 
-%w(ext).each do |f|
+%w(ext shell_out).each do |f|
   require File.dirname(__FILE__) + "/lsl/ext/#{f}"
 end
 
@@ -23,7 +23,7 @@ end
   require File.dirname(__FILE__) + "/lsl/#{f}"
 end
 
-%w(base).each do |f|
+%w(base mapping builtin).each do |f|
   require File.dirname(__FILE__) + "/lsl/operator/#{f}"
 end
 
