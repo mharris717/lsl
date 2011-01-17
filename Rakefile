@@ -67,3 +67,30 @@ task :make_parsers do
     `tt #{f} -o parsers/#{name}.rb`
   end
 end
+
+def gem_hash
+  reg = /(.*)\(.*([0-9]\.[0-9]\.[0-9])/
+  lines = File.read("Gemfile.lock").split("\n").select { |x| x =~ reg }.map { |x| x.strip }
+  res = {}
+  gems = lines.map do |ln|
+    ln =~ reg
+    g, version = $1, $2
+    #raise "double #{g}" if res[g]
+    res[g] = version
+  end
+  res
+end
+
+def gem_js
+  gem_hash.map do |g,v|
+    "$('#gem').val('#{g}'); " + 
+    "$('#version').val('#{v}'); " + 
+    "$('#commit').click()"
+  end.join("\n")
+end
+
+task :js_gems do
+  require 'mharris_ext'
+  File.create("gem.js",gem_js)
+end
+

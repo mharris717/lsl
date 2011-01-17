@@ -16,9 +16,7 @@ module LSL
         end
       }
     end
-    rule args_and_options
-      (args options) / args / options
-    end
+
     rule after_ex
       ows args_and_ops {
         def args
@@ -39,7 +37,7 @@ module LSL
     end
     
     rule arg_or_op
-      arg / option_flag
+      arg / option
     end
     
     rule args_and_ops
@@ -50,8 +48,7 @@ module LSL
           res + (get_spaced_node(:args_and_ops).andand.args || [])
         end
         def options
-          res = {}
-          res[arg_or_op.word.text_value] = true if arg_or_op.at == :op
+          res = (arg_or_op.at == :op) ? arg_or_op.kv : {}
           res.merge(get_spaced_node(:args_and_ops).andand.options || {})
         end
       }
@@ -65,32 +62,16 @@ module LSL
       }
     end
     
-    rule args
-      arg spaced_args:(ws args)? {
-        def arg_values
-          [arg.unquotedx.to_parsed_obj] + (get_spaced_node(:args).andand.arg_values || [])
-        end
-      }
-    end
-    
     rule option_flag
-      '-' 1..2 word {
-        def at
-          :op
-        end
-      }
+      '-' 1..2 word
     end
     rule option
-      option_flag ("=" word) {
+      option_flag spaced_val:("=" val:optionally_quoted_string)? {
         def kv
-          {option_flag.word.text_value => get_spaced_node(:option_value).andand.unquotedx}
+          {option_flag.word.text_value => get_spaced_node(:val).andand.text_value.andand.unquoted || true}
         end
-      }
-    end
-    rule options
-      option spaced_options:(ws options)? {
-        def hash_values
-          option.kv.merge(get_spaced_node(:options).andand.hash_values || {})
+        def at
+          :op
         end
       }
     end

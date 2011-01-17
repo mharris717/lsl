@@ -29,7 +29,8 @@ module LSL
         echo(*args)
       end
       def ls(d=".")
-        ec_array "ls #{d}"
+        res = ec_array "ls #{d}"
+        res.reject { |x| x =~ /ls: cannot access/i }
       end
       def cat(f)
         ::File.read(f)

@@ -127,11 +127,8 @@ module LSL
           return
         end
         command_executions
-        if command.output_filename
-          ::File.create(command.output_filename,result.join("\n"))
-        else
-          # do nothing, printing happens in input loop
-        end
+        
+        # do nothing, printing happens in input loop
       end
       def print!
         puts result_str if result

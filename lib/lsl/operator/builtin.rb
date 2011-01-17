@@ -3,7 +3,7 @@ module LSL
     
     class Pipe < Base
       def before_call
-        puts pipe_options.inspect
+        #puts pipe_options.inspect
       end
       def call
         if input_args.empty?

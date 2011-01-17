@@ -55,7 +55,8 @@ RSpec::Matchers.define :parse_as do |str,node,exp|
       #raise @res.instance_variables.inspect
       "no syntax node #{node}, nodes are " + @res.elements.map { |x| x.inspect }.join(",")
     else
-      act = @res.send(node).text_value
+      act = @res.send(node)
+      act = act.text_value if act.respond_to?(:text_value)
       if act != exp.to_s
         "#{act} doesn't equal #{exp}"
       else
@@ -72,5 +73,19 @@ RSpec::Matchers.define :parse_as do |str,node,exp|
   end
   failure_message_for_should do |player|
     res_error_message(str,node,exp)
+  end
+end
+
+RSpec::Matchers.define :parse_str do |str|
+  match do |parser|
+    @parser = parser
+    @res = res = parser.parse(str)
+    @res
+  end
+  description do
+    "FOO"
+  end
+  failure_message_for_should do |player|
+    "can't parse #{str}\n#{@parser.failure_reason}\n#{@parser.terminal_failures.inspect}"
   end
 end

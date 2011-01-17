@@ -25,9 +25,12 @@ describe "Command" do
     it "ex with quoted arg" do
       parser.should be_parsed('cp "a b"')
     end
-    it "ex with list arg" do
-      parser.should be_parsed('cp a,b c')
-    end
+    
+    #this test was for commalist functionality, which I'm removing for now.  
+    #it "ex with list arg" do
+      #parser.should be_parsed('cp a,b c')
+    #end
+    
     describe "options" do
       it "option with value" do
         parser.should be_parsed("cp -name abc")
@@ -45,8 +48,7 @@ describe "Command" do
     parser.should parse_as("cp a b",:ex,:cp)
   end
   it "should have args" do
-    parser.should parse_as("cp a b",:args,"a b")
-    parse("cp a b").args.list_values.should == ['a','b']
+    parse("cp a b").args.should == ['a','b']
   end
   describe "command hash" do
     it "naked ex" do
@@ -65,13 +67,16 @@ describe "Command" do
       parse('cp "abc"').command_hash.args.should == ['abc']
     end
     it "ex and options" do
-      parse("cp -v").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => nil}}
+      parse("cp -v").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => true}}
     end
     it "ex and multiple options" do
-      parse("cp -v -x").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => nil, "x" => nil}}
+      parse("cp -v -x").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => true, "x" => true}}
     end
     it "ex and option value" do
-      parse("cp -v a").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => 'a'}}
+      parse("cp -v=a").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => 'a'}}
+    end
+    it "ex and option value with 2 dashes" do
+      parse("cp --v=a").command_hash.to_h.should == {:ex => "cp", :args => [], :options => {"v" => 'a'}}
     end
     it 'raw string' do
       parse("cp a b").command_hash.raw.should == 'cp a b'
