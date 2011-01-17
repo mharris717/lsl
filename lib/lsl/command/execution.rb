@@ -72,7 +72,8 @@ module LSL
         elsif obj.respond_to?(command.method)
           obj.send(command.method,*args)
         else
-          `#{command.raw}`.output_to_array
+          a = args.join(" ")
+          `#{command.raw} #{a}`.output_to_array
         end
       end
       def run!
