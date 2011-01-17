@@ -13,6 +13,9 @@ LSL.configure do |s|
   s.mapping :ms do |num|
     num.to_i * 2
   end
+  s.mapping :read do |f|
+    File.read(f)
+  end
   
   s.alias :em do
     default 'eval', 'a'
@@ -24,3 +27,4 @@ LSL.configure do |s|
     puts "BANG"
   end
 end
+
