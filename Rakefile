@@ -60,3 +60,10 @@ task :make_readme do
     sleep(0.5)
   end
 end
+
+task :make_parsers do
+  Dir["lib/lsl/grammars/*.treetop"].each do |f|
+    name = File.basename(f).split(".").first
+    `tt #{f} -o parsers/#{name}.rb`
+  end
+end

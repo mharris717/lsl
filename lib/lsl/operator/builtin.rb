@@ -33,7 +33,13 @@ module LSL
         next_command.push_ex "create_file"
       end  
       def call
-        yield(input_args.join("\n"))
+        if pipe_options['i']
+          input_args.each do |args|
+            yield(*args)
+          end
+        else
+          yield(input_args.join("\n"))
+        end
       end
     end
     
@@ -42,7 +48,13 @@ module LSL
         next_command.push_ex "append_file"
       end  
       def call
-        yield(input_args.join("\n"))
+        if pipe_options['i']
+          input_args.each do |args|
+            yield(*args)
+          end
+        else
+          yield(input_args.join("\n"))
+        end
       end
     end
   end

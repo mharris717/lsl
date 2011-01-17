@@ -34,9 +34,19 @@ class Object
   def send_if_respond(meth)
     respond_to?(meth) ? send(meth) : nil
   end
-  def get_spaced_node(meth)
-    parent = send("spaced_#{meth}")
-    parent.send_if_respond(meth)
+  def get_spaced_node(meth,outer=nil)
+    outer ||= "spaced_#{meth}"
+    parent = send(outer)
+    parent.get_child_node(meth)
+  end
+  def get_child_node(meth)
+    send_if_respond(meth).tap { |x| return x if x }
+    if self && self.elements && self.elements.size > 0
+      elements.each do |e|
+        e.send_if_respond(meth).tap { |x| return x if x }
+      end
+    end
+    nil
   end
 end
 

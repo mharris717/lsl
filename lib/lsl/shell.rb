@@ -115,9 +115,11 @@ module LSL
       end
       def create_file(filename,str)
         ::File.create(filename,str)
+        str
       end
       def append_file(filename,str)
         ::File.append(filename,str)
+        str
       end
         
     end
